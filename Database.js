@@ -4,7 +4,7 @@ module.exports = [
       {
         id: "user_01",
         username: "user1",
-        password: "password1",
+        password: "11",
         membership: {
           membershipId: "001",
           name: "라이트",
@@ -13,7 +13,7 @@ module.exports = [
       {
         id: "user_02",
         username: "user2",
-        password: "password2",
+        password: "11",
         membership: {
           membershipId: "002",
           name: "프리미엄",

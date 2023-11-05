@@ -1,23 +1,16 @@
 // controller.js
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // 실제 서비스에서는 안전한 곳에 보관
 
 // 데이터베이스 더미 데이터
-const USERS = require("../Database").users;
+const USERS = require("../Database");
 const MEMBERSHIPS = require("../Database").memberships;
-
-// 비밀번호 검증 함수
-const validatePassword = (inputPassword, storedPassword) => {
-  // 실제 어플리케이션에서는 bcrypt와 같은 라이브러리를 사용해 암호화된 비밀번호를 비교합니다.
-  return bcrypt.compareSync(inputPassword, storedPassword);
-};
 
 // 사용자 인증 (로그인) 함수
 const authenticateUser = (req, res) => {
   const { username, password } = req.body;
-  const user = USERS.find((user) => user.username === username);
-  if (user && validatePassword(password, user.password)) {
+  const user = USERS[0].users.find((user) => user.username === username);
+  if (user && password === user.password) {
     const accessToken = jwt.sign(
       { userId: user.id, username: user.username },
       JWT_SECRET,

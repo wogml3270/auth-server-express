@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 // CORS 설정
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 // JSON 파싱을 위한 미들웨어
 app.use(express.json());
@@ -42,7 +46,7 @@ const requireLogin = (req, res, next) => {
 };
 
 // 로그인 라우트
-app.post("auth/login", authenticateUser);
+app.post("/auth/login", authenticateUser);
 
 // 사용자 정보를 불러오는 라우트
 app.get("/user/me", requireLogin, getUserInfo);
