@@ -3,13 +3,13 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // 실제 서비스에서는 안전한 곳에 보관
 
 // 데이터베이스 더미 데이터
-const USERS = require("../Database");
+const USERS = require("../Database").users;
 const MEMBERSHIPS = require("../Database").memberships;
 
 // 사용자 인증 (로그인) 함수
 const authenticateUser = (req, res) => {
   const { username, password } = req.body;
-  const user = USERS[0].users.find((user) => user.username === username);
+  const user = USERS.find((user) => user.username === username);
   if (user && password === user.password) {
     const accessToken = jwt.sign(
       { userId: user.id, username: user.username },
