@@ -1,4 +1,3 @@
-// controller.js
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // 실제 서비스에서는 안전한 곳에 보관
 
@@ -68,43 +67,36 @@ const getUserInfo = (req, res) => {
 
 // 토큰 재발급
 const refreshAuthToken = (req, res) => {
-  // Refresh Token 검증 로직을 여기에 구현
-  // 예제에서는 간단한 검증을 위해 더미 데이터의 refreshToken을 검사
   const { refreshToken } = req.body;
-  if (refreshToken !== "refresh_token") {
-    return res.status(401).json({
-      txId: "unique_transaction_id",
-      error: {
-        message: "Invalid refresh token",
-      },
-    });
-  }
 
-  // 여기서는 단순히 user1의 정보를 사용합니다.
-  const user = USERS.find((u) => u.username === "user1");
+  // USERS 배열에서 refreshToken과 일치하는 사용자를 찾습니다.
+  const user = USERS.find((u) => u.refreshToken === refreshToken);
   if (!user) {
     return res.status(401).json({
       txId: "unique_transaction_id",
       error: {
-        message: "User not found",
+        message: "유효하지 않은 토큰입니다.",
       },
     });
   }
 
+  // 사용자가 유효한 경우 새로운 액세스 토큰을 생성합니다.
   const newAccessToken = jwt.sign(
     { userId: user.id, username: user.username },
     JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1s" }
   );
 
+  // 새로운 액세스 토큰과 함께 응답을 반환합니다.
   res.json({
     txId: "unique_transaction_id",
     data: {
       userId: user.id,
       accessToken: newAccessToken,
-      refreshToken: refreshToken, // 실제로는 새로 발급되는 refreshToken을 보내야 합니다.
+      refreshToken: user.refreshToken, // 여기서는 기존 refreshToken을 반환하고 있습니다.
     },
   });
+  console.log(refreshToken);
 };
 
 module.exports = {
